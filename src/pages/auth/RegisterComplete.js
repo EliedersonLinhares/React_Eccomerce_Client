@@ -58,7 +58,7 @@ const RegisterComplete = ({ history }) => {
 							},
 						})
 					})
-					.catch()
+					.catch((error) => console.log(error))
 
 				//redirect
 				history.push('/')
