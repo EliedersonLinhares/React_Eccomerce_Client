@@ -1,10 +1,17 @@
 import React, { useState, useEffect } from 'react'
 import { auth } from '../../firebase'
 import { toast } from 'react-toastify'
+import { useDispatch, useSelector } from 'react-redux'
+import { createOrUpdateUser } from '../../functions/auth'
 
 const RegisterComplete = ({ history }) => {
 	const [email, setEmail] = useState('')
 	const [password, setPassword] = useState('')
+
+	//Impedindo que a pagina seja acessada caso o usuario já esteja logado usando o UseEffect e o UseSelector
+	const { user } = useSelector((state) => ({ ...state }))
+
+	let dispatch = useDispatch()
 
 	//UseState: quando o password mudar o usestate tambem muda
 	useEffect(() => {
@@ -33,9 +40,26 @@ const RegisterComplete = ({ history }) => {
 				//get user id token
 				let user = auth.currentUser
 				await user.updatePassword(password)
-				const idTokenresult = await user.getIdTokenResult()
+				const idTokenResult = await user.getIdTokenResult()
 				//redux store
-				console.log('user', user, 'idTokenResult', idTokenresult)
+				console.log('user', user, 'idTokenResult', idTokenResult)
+
+				//save on backend
+				createOrUpdateUser(idTokenResult.token)
+					.then((res) => {
+						dispatch({
+							type: 'LOGGED_IN_USER',
+							payload: {
+								name: res.data.name,
+								email: res.data.email,
+								token: idTokenResult.token,
+								role: res.data.role,
+								_id: res.data._id,
+							},
+						})
+					})
+					.catch()
+
 				//redirect
 				history.push('/')
 			}
