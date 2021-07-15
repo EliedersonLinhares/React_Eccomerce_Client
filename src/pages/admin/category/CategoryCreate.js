@@ -14,34 +14,38 @@ const CategoryCreate = () => {
 	const { user } = useSelector((state) => ({ ...state }))
 
 	const [name, setName] = useState('')
-	const [loading, setLoading] = useState('false')
+	const [loading, setLoading] = useState(false)
 	const [categories, setCategories] = useState([])
 
 	useEffect(() => {
 		loadCategories()
 	}, [])
 
-	const loadCategories = () => {
+	const loadCategories = () =>
 		getCategories().then((c) => setCategories(c.data))
-	}
 
 	const handleSubmit = (e) => {
 		e.preventDefault()
+		// console.log(name);
 		setLoading(true)
 		createCategory({ name }, user.token)
 			.then((res) => {
+				// console.log(res)
 				setLoading(false)
 				setName('')
-				toast.success(`${res.data.name} is created`)
+				toast.success(`"${res.data.name}" is created`)
 				loadCategories()
 			})
-			.catch((error) => {
+			.catch((err) => {
+				console.log(err)
 				setLoading(false)
-				if (error.response.status === 400) toast.error(error.response.data)
+				if (err.response.status === 400) toast.error(err.response.data)
 			})
 	}
 
 	const handleRemove = async (slug) => {
+		// let answer = window.confirm("Delete?");
+		// console.log(answer, slug);
 		if (window.confirm('Delete?')) {
 			setLoading(true)
 			removeCategory(slug, user.token)
@@ -50,10 +54,10 @@ const CategoryCreate = () => {
 					toast.error(`${res.data.name} deleted`)
 					loadCategories()
 				})
-				.catch((error) => {
-					if (error.response.status === 400) {
+				.catch((err) => {
+					if (err.response.status === 400) {
 						setLoading(false)
-						toast.error(error.response.data)
+						toast.error(err.response.data)
 					}
 				})
 		}
@@ -85,7 +89,7 @@ const CategoryCreate = () => {
 				</div>
 				<div className='col'>
 					{loading ? (
-						<h4 className='text-danger'>Loading...</h4>
+						<h4 className='text-danger'>Loading..</h4>
 					) : (
 						<h4>Create category</h4>
 					)}
