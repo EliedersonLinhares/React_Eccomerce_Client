@@ -3,7 +3,7 @@ import AdminNav from '../../../Components/nav/AdminNav'
 import { toast } from 'react-toastify'
 import { useSelector } from 'react-redux'
 import { getCategories } from '../../../functions/category'
-import { createSub, getSub, removeSub } from '../../../functions/sub'
+import { createSub, getSub, removeSub, getSubs } from '../../../functions/sub'
 import { Link } from 'react-router-dom'
 import { EditOutlined, DeleteOutlined } from '@ant-design/icons'
 import CategoryForm from '../../../Components/forms/CategoryForm'
@@ -16,17 +16,20 @@ const SubCreate = () => {
 	const [loading, setLoading] = useState(false)
 	const [categories, setCategories] = useState([]) //for select combo
 	const [category, setCategory] = useState('') //for set value
-
+	const [subs, setSubs] = useState([])
 	//searching /filtering
 	//step1
 	const [keyword, setKeyword] = useState('')
 
 	useEffect(() => {
 		loadCategories()
+		loadSubs()
 	}, [])
 
 	const loadCategories = () =>
 		getCategories().then((c) => setCategories(c.data))
+
+	const loadSubs = () => getSubs().then((c) => setSubs(c.data))
 
 	const handleSubmit = (e) => {
 		e.preventDefault()
@@ -38,7 +41,7 @@ const SubCreate = () => {
 				setLoading(false)
 				setName('')
 				toast.success(`"${res.data.name}" is created`)
-				//loadCategories()
+				loadSubs()
 			})
 			.catch((err) => {
 				console.log(err)
@@ -56,7 +59,7 @@ const SubCreate = () => {
 				.then((res) => {
 					setLoading(false)
 					toast.error(`${res.data.name} deleted`)
-					//loadCategories()
+					loadSubs()
 				})
 				.catch((err) => {
 					if (err.response.status === 400) {
@@ -109,7 +112,7 @@ const SubCreate = () => {
 					<LocalSearch keyword={keyword} setKeyword={setKeyword} />
 
 					{/** step 5 */}
-					{/** {categories.filter(searched(keyword)).map((c) => (
+					{subs.filter(searched(keyword)).map((c) => (
 						<div className='alert alert-secondary' key={c._id}>
 							{c.name}
 							<span
@@ -118,13 +121,13 @@ const SubCreate = () => {
 							>
 								<DeleteOutlined className='text-danger' />
 							</span>
-							<Link to={`/admin/category/${c.slug}`}>
+							<Link to={`/admin/sub/${c.slug}`}>
 								<span className='btn btn-sm float-right'>
 									<EditOutlined className='text-warning' />
 								</span>
 							</Link>
 						</div>
-					))} */}
+					))}
 				</div>
 			</div>
 		</div>
