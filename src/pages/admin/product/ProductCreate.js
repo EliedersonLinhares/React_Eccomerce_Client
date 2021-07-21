@@ -1,11 +1,10 @@
 import React, { useState, useEffect } from 'react'
 import AdminNav from '../../../Components/nav/AdminNav'
-//import { toast } from 'react-toastify'
-//import { useSelector } from 'react-redux'
-//import { createproduct } from '../../../functions/product'
+import { toast } from 'react-toastify'
+import { useSelector } from 'react-redux'
+import { createProduct } from '../../../functions/product'
 //import { Link } from 'react-router-dom'
 //import { EditOutlined, DeleteOutlined } from '@ant-design/icons'
-//import CategoryForm from '../../../Components/forms/CategoryForm'
 //import LocalSearch from '../../../Components/forms/LocalSearch'
 
 const initialState = {
@@ -27,7 +26,10 @@ const initialState = {
 const ProductCreate = () => {
 	const [values, setValues] = useState(initialState)
 
-	//destructure
+	// redux
+	const { user } = useSelector((state) => ({ ...state }))
+
+	// destructure
 	const {
 		title,
 		description,
@@ -44,8 +46,26 @@ const ProductCreate = () => {
 		brand,
 	} = values
 
-	const handleSubmit = (e) => {}
-	const handleChange = (e) => {}
+	const handleSubmit = (e) => {
+		e.preventDefault()
+		createProduct(values, user.token)
+			.then((res) => {
+				console.log(res)
+				//console.log(JSON.stringify(res.data))
+				//toast.success(`"${values.title}" is created`)
+				window.alert(`"${res.data.title}" is created`)
+				window.location.reload()
+			})
+			.catch((err) => {
+				console.log(err)
+				if (err.response.status === 400) toast.error(err.response.data)
+			})
+	}
+
+	const handleChange = (e) => {
+		setValues({ ...values, [e.target.name]: e.target.value })
+		// console.log(e.target.name, " ----- ", e.target.value);
+	}
 
 	return (
 		<div className='container-fluid'>
