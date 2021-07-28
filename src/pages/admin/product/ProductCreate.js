@@ -8,6 +8,8 @@ import ProductCreateForm from '../../../Components/forms/ProductCreateForm'
 //import { EditOutlined, DeleteOutlined } from '@ant-design/icons'
 //import LocalSearch from '../../../Components/forms/LocalSearch'
 
+import { getCategories } from '../../../functions/category'
+
 const initialState = {
 	title: '',
 	description: '',
@@ -29,6 +31,13 @@ const ProductCreate = () => {
 
 	// redux
 	const { user } = useSelector((state) => ({ ...state }))
+
+	useEffect(() => {
+		loadCategories()
+	}, [])
+
+	const loadCategories = () =>
+		getCategories().then((c) => setValues({ ...values, categories: c.data }))
 
 	const handleSubmit = (e) => {
 		e.preventDefault()
