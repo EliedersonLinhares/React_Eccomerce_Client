@@ -8,7 +8,7 @@ import ProductCreateForm from '../../../Components/forms/ProductCreateForm'
 //import { EditOutlined, DeleteOutlined } from '@ant-design/icons'
 //import LocalSearch from '../../../Components/forms/LocalSearch'
 
-import { getCategories } from '../../../functions/category'
+import { getCategories, getCategorySubs } from '../../../functions/category'
 
 const initialState = {
 	title: '',
@@ -28,6 +28,8 @@ const initialState = {
 
 const ProductCreate = () => {
 	const [values, setValues] = useState(initialState)
+	const [subOptions, setSubOptions] = useState([])
+	const [showSub, setShowSub] = useState(false)
 
 	// redux
 	const { user } = useSelector((state) => ({ ...state }))
@@ -61,6 +63,15 @@ const ProductCreate = () => {
 		// console.log(e.target.name, " ----- ", e.target.value);
 	}
 
+	const handleCategoryChange = (e) => {
+		e.preventDefault()
+		setValues({ ...values, category: e.target.value })
+		getCategorySubs(e.target.value).then((res) => {
+			console.log('Sub Options pn category click', res)
+			setSubOptions(res.data)
+		})
+	}
+
 	return (
 		<div className='container-fluid'>
 			<div className='row'>
@@ -76,6 +87,9 @@ const ProductCreate = () => {
 						handleSubmit={handleSubmit}
 						handleChange={handleChange}
 						values={values}
+						handleCategoryChange={handleCategoryChange}
+						subOptions={subOptions}
+						showSub={showSub}
 					/>
 				</div>
 			</div>
