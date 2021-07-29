@@ -65,11 +65,12 @@ const ProductCreate = () => {
 
 	const handleCategoryChange = (e) => {
 		e.preventDefault()
-		setValues({ ...values, category: e.target.value })
+		setValues({ ...values, subs: [], category: e.target.value })
 		getCategorySubs(e.target.value).then((res) => {
 			console.log('Sub Options pn category click', res)
 			setSubOptions(res.data)
 		})
+		setShowSub(true)
 	}
 
 	return (
@@ -86,6 +87,7 @@ const ProductCreate = () => {
 					<ProductCreateForm
 						handleSubmit={handleSubmit}
 						handleChange={handleChange}
+						setValues={setValues}
 						values={values}
 						handleCategoryChange={handleCategoryChange}
 						subOptions={subOptions}
