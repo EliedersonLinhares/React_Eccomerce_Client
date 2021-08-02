@@ -5,6 +5,7 @@ import { useSelector } from 'react-redux'
 import { createProduct } from '../../../functions/product'
 import ProductCreateForm from '../../../Components/forms/ProductCreateForm'
 import FileUpload from '../../../Components/forms/FileUpload'
+import { LoadingOutlined } from '@ant-design/icons'
 //import { Link } from 'react-router-dom'
 //import { EditOutlined, DeleteOutlined } from '@ant-design/icons'
 //import LocalSearch from '../../../Components/forms/LocalSearch'
@@ -83,7 +84,11 @@ const ProductCreate = () => {
 				</div>
 
 				<div className='col-md-10'>
-					<h4>Product create</h4>
+					{loading ? (
+						<LoadingOutlined className='text-danger h1' />
+					) : (
+						<h4>Product create</h4>
+					)}
 					<hr />
 
 					<div className='p-3'>
