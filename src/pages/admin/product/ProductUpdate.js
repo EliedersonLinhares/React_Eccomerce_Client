@@ -9,6 +9,8 @@ import { LoadingOutlined } from '@ant-design/icons'
 
 import { getCategories, getCategorySubs } from '../../../functions/category'
 
+import ProductUpdateForm from '../../../Components/forms/ProductUpdateForm'
+
 const initialState = {
 	title: '',
 	description: '',
@@ -43,6 +45,16 @@ const ProductUpdate = ({ match }) => {
 			setValues({ ...values, ...p.data })
 		})
 	}
+
+	const handleSubmit = (e) => {
+		e.preventDefault()
+	}
+
+	const handleChange = (e) => {
+		setValues({ ...values, [e.target.name]: e.target.value })
+		// console.log(e.target.name, " ----- ", e.target.value);
+	}
+
 	return (
 		<div className='container-fluid'>
 			<div className='row'>
@@ -52,6 +64,12 @@ const ProductUpdate = ({ match }) => {
 
 				<div className='col-md-10'>
 					<h4>Product Update</h4>
+					<ProductUpdateForm
+						handleSubmit={handleSubmit}
+						handleChange={handleChange}
+						setValues={setValues}
+						values={values}
+					/>
 					<hr />
 				</div>
 			</div>
