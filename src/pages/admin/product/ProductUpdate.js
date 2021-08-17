@@ -15,7 +15,6 @@ const initialState = {
 	title: '',
 	description: '',
 	price: '',
-	categories: [],
 	category: '',
 	subs: [],
 	shipping: '',
@@ -30,6 +29,8 @@ const initialState = {
 const ProductUpdate = ({ match }) => {
 	//state
 	const [values, setValues] = useState(initialState)
+	const [subOptions, setSubOptions] = useState([])
+	const [categories, SetCategories] = useState([])
 
 	// redux
 	const { user } = useSelector((state) => ({ ...state }))
@@ -38,11 +39,24 @@ const ProductUpdate = ({ match }) => {
 
 	useEffect(() => {
 		loadProduct()
+		loadCategories()
 	}, [])
 
 	const loadProduct = () => {
 		getProduct(slug).then((p) => {
 			setValues({ ...values, ...p.data })
+		})
+	}
+
+	const loadCategories = () => {
+		getCategories().then((c) => SetCategories(c.data))
+	}
+	const handleCategoryChange = (e) => {
+		e.preventDefault()
+		setValues({ ...values, subs: [], category: e.target.value })
+		getCategorySubs(e.target.value).then((res) => {
+			console.log('Sub Options pn category click', res)
+			setSubOptions(res.data)
 		})
 	}
 
@@ -69,6 +83,9 @@ const ProductUpdate = ({ match }) => {
 						handleChange={handleChange}
 						setValues={setValues}
 						values={values}
+						handleCategoryChange={handleCategoryChange}
+						categories={categories}
+						subOptions={subOptions}
 					/>
 					<hr />
 				</div>
