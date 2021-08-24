@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react'
 import AdminNav from '../../../Components/nav/AdminNav'
 import { toast } from 'react-toastify'
 import { useSelector } from 'react-redux'
-import { getProduct } from '../../../functions/product'
+import { getProduct, updateProduct } from '../../../functions/product'
 
 import FileUpload from '../../../Components/forms/FileUpload'
 import { LoadingOutlined } from '@ant-design/icons'
@@ -26,7 +26,7 @@ const initialState = {
 	brand: '',
 }
 
-const ProductUpdate = ({ match }) => {
+const ProductUpdate = ({ match, history }) => {
 	//state
 	const [values, setValues] = useState(initialState)
 	const [subOptions, setSubOptions] = useState([])
@@ -86,6 +86,22 @@ const ProductUpdate = ({ match }) => {
 
 	const handleSubmit = (e) => {
 		e.preventDefault()
+		setLoading(true)
+
+		values.subs = arrayOfSubs
+		values.category = selectedCategory ? selectedCategory : values.category
+
+		updateProduct(slug, values, user.token)
+			.then((res) => {
+				setLoading(false)
+				toast.success(`"${res.data.title}" is updated`)
+				history.push('/admin/products')
+			})
+			.catch((err) => {
+				console.log(err)
+				setLoading(false)
+				toast.error(err.response.data.err)
+			})
 	}
 
 	const handleChange = (e) => {
