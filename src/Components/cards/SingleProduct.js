@@ -5,11 +5,10 @@ import { HeartOutlined, ShoppingCartOutlined } from '@ant-design/icons'
 import 'react-responsive-carousel/lib/styles/carousel.min.css'
 import { Carousel } from 'react-responsive-carousel'
 import laptop from '../../images/laptop.png'
-
-const { Meta } = Card
+import ProductListItems from './ProductListItems'
 
 const SingleProduct = ({ product }) => {
-	const { title, description, images, slug } = product
+	const { title, images } = product
 
 	return (
 		<>
@@ -28,6 +27,7 @@ const SingleProduct = ({ product }) => {
 				)}
 			</div>
 			<div className='col-md-5'>
+				<h1 className='bg-info p-3'>{title}</h1>
 				<Card
 					actions={[
 						<>
@@ -39,7 +39,7 @@ const SingleProduct = ({ product }) => {
 						</Link>,
 					]}
 				>
-					<Meta title={title} description={description} />
+					<ProductListItems product={product} />
 				</Card>
 			</div>
 		</>
